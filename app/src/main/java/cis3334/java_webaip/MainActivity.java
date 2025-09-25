@@ -72,8 +72,38 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getStudentAPI() {
-        // ======================= Student must add code here to get JSON data from an API =======================
-        textViewStatus.setText("Not implemented yet ....");
+        textViewStatus.setText("Fetching cat fact...");
+        String url = "https://meowfacts.herokuapp.com/"; // Added https://
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.GET, url, null,
+                response -> {
+                    try {
+                        JSONArray dataArray = response.getJSONArray("data");
+                        if (dataArray.length() > 0) {
+                            String catFact = dataArray.getString(0);
+                            textViewStatus.setText("Cat Fact: " + catFact);
+                        } else {
+                            textViewStatus.setText("Cat Fact: No fact found in response.");
+                        }
+                    } catch (JSONException e) {
+                        textViewStatus.setText("Cat Fact: JSON parsing error - " + e.getMessage());
+                        Log.e("CIS 3334", "Cat Fact JSONException", e);
+                    }
+                },
+                error -> {
+                    String msg = "Volley error (Cat Fact API): " + error.toString();
+                    if (error.networkResponse != null) {
+                        msg += " (HTTP " + error.networkResponse.statusCode + ")";
+                        try {
+                            msg += " " + new String(error.networkResponse.data, "UTF-8");
+                        } catch (Exception ignored) {}
+                    }
+                    textViewStatus.setText(msg);
+                    Log.e("CIS 3334", "getStudentAPI (Cat Fact) error", error);
+                }
+        );
+        mRequestQueue.add(jsonObjectRequest);
     }
 
     private void getDogFact() {
