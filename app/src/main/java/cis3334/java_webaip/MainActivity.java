@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     textViewStatus.setText(msg);
                     Log.e("CIS 3334", "getStudentAPI (Cat Fact) error", error);
-                }
+                } //testing with git
         );
         mRequestQueue.add(jsonObjectRequest);
     }
